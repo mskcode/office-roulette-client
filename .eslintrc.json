@@ -1,0 +1,90 @@
+{
+    "env": {
+        "browser": true,
+        "es2020": true
+    },
+    "extends": [
+        "react-app",
+        "react-app/jest",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "@typescript-eslint/consistent-type-definitions": [
+            "error", "type"
+        ],
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-explicit-any": [
+            "error", { "fixToUnknown": true, "ignoreRestArgs": true }
+        ],
+        "arrow-spacing": [
+            "error", { "before": true, "after": true }
+        ],
+        "comma-spacing": [
+            "error", { "before": false, "after": true }
+        ],
+        "eqeqeq": "error",
+        "func-call-spacing": [
+            "error",
+            "never"
+        ],
+        "import/no-anonymous-default-export": [
+            "error", {
+                "allowObject": true
+            }
+        ],
+        "indent": [
+            "error",
+            2
+        ],
+        "keyword-spacing": [
+            "error", { "before": true, "after": true }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "no-trailing-spaces": "error",
+        "no-empty-function": "off",
+        "object-curly-spacing": [
+            "error", "always"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "react/react-in-jsx-scope": "off",
+        "semi": [
+            "error",
+            "never"
+        ],
+        "space-in-parens": [
+            "error",
+            "never"
+        ],
+        "space-before-blocks": [
+            "error",
+            "always"
+        ],
+        "space-before-function-paren": [
+            "error", {
+                "anonymous": "always",
+                "named": "never",
+                "asyncArrow": "always"
+            }
+        ]
+    }
+}
