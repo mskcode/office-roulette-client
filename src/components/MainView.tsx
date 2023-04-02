@@ -1,10 +1,7 @@
-import Box from '@mui/material/Box'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import Typography from '@mui/material/Typography'
+import { Box, Tab, Tabs, Typography } from '@mui/material'
 import * as React from 'react'
-import DrawTable from './DrawTable'
-import EmployeeTable from './EmployeeTable'
+import DrawView from './DrawView'
+import EmployeeView from './EmployeeView'
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -55,10 +52,10 @@ export default function MainView(): JSX.Element {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <EmployeeTable />
+        <EmployeeView />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DrawTable />
+        <DrawView />
       </TabPanel>
     </div>
   )

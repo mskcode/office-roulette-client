@@ -1,7 +1,6 @@
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
+import { Box, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as React from 'react'
 import logo from '../resources/app-logo-2.svg'
