@@ -62,7 +62,7 @@ export default function EmployeeTable(props?: EmployeeTableProperties): JSX.Elem
               </TableCell>
               <TableCell align="right">{employee.employmentStartTime}</TableCell>
               <TableCell align="right">{employee.status}</TableCell>
-              <TableCell><Button variant="text" onClick={() => onDeleteEmployeeClick(employee.id)}><DeleteIcon /></Button></TableCell>
+              <TableCell align="right"><Button variant="text" onClick={() => onDeleteEmployeeClick(employee.id)}><DeleteIcon /></Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
