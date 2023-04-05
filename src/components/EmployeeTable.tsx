@@ -1,7 +1,14 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { styled } from '@mui/system'
 import * as React from 'react'
 import { Employee, deleteEmployee, fetchEmployees } from '../services/officeRouletteClient'
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  }
+}))
 
 type EmployeeTableProperties = {
   modalSelectionMode?: boolean,
@@ -50,7 +57,7 @@ export default function EmployeeTable(props?: EmployeeTableProperties): JSX.Elem
         </TableHead>
         <TableBody>
           {employees.map((employee) => (
-            <TableRow
+            <StyledTableRow
               key={employee.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
@@ -63,7 +70,7 @@ export default function EmployeeTable(props?: EmployeeTableProperties): JSX.Elem
               <TableCell align="right">{employee.employmentStartTime}</TableCell>
               <TableCell align="right">{employee.status}</TableCell>
               <TableCell align="right"><Button variant="text" onClick={() => onDeleteEmployeeClick(employee.id)}><DeleteIcon /></Button></TableCell>
-            </TableRow>
+            </StyledTableRow>
           ))}
         </TableBody>
       </Table>
