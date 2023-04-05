@@ -16,6 +16,7 @@ import {
 import Grid2 from '@mui/material/Unstable_Grid2'
 import * as React from 'react'
 import { Draw, createDraw, fetchDraws } from '../services/officeRouletteClient'
+import { HoverTableRow } from './HoverTableRow'
 
 
 function RefreshDrawTableButton(): JSX.Element {
@@ -56,14 +57,14 @@ function DrawTable(): JSX.Element {
         </TableHead>
         <TableBody>
           {draws.map((draw) => (
-            <TableRow
+            <HoverTableRow
               key={draw.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">{draw.id}</TableCell>
               <TableCell align="right">{draw.status}</TableCell>
               <TableCell align="right"><Button variant="contained">Select</Button></TableCell>
-            </TableRow>
+            </HoverTableRow>
           ))}
         </TableBody>
       </Table>
