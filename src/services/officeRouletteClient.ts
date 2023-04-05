@@ -46,7 +46,7 @@ export type FullDraw = {
   insertTime: string, // ISO8601
   drawTime?: string, // ISO8601
   participants: Employee[],
-  result: DrawResult,
+  result?: DrawResult,
 }
 
 export const fetchDraws = async (): Promise<Draw[]> => {

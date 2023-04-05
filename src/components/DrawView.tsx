@@ -15,7 +15,8 @@ import {
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import * as React from 'react'
-import { Draw, createDraw, fetchDraws } from '../services/officeRouletteClient'
+import { Draw, FullDraw, createDraw, fetchDraw, fetchDraws } from '../services/officeRouletteClient'
+import { reformatIso8601Timestamp } from '../services/utils'
 import { HoverTableRow } from './HoverTableRow'
 
 
@@ -29,7 +30,7 @@ function RefreshDrawTableButton(): JSX.Element {
   )
 }
 
-function DrawTable(): JSX.Element {
+function DrawTable(props: { setSelectedDraw: React.Dispatch<React.SetStateAction<FullDraw | undefined>> }): JSX.Element {
   const [draws, setDraws] = React.useState<Draw[]>([])
 
   React.useEffect(() => {
@@ -44,6 +45,16 @@ function DrawTable(): JSX.Element {
     }
     asyncFetchDraws()
   }, [])
+
+  const onTableRowClick = async (drawId: number) => {
+    try {
+      const draw = await fetchDraw(drawId)
+      props.setSelectedDraw(draw)
+    } catch (e: unknown) {
+      // TODO handle error
+      console.log(e)
+    }
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -60,6 +71,7 @@ function DrawTable(): JSX.Element {
             <HoverTableRow
               key={draw.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              onClick={() => onTableRowClick(draw.id)}
             >
               <TableCell component="th" scope="row">{draw.id}</TableCell>
               <TableCell align="right">{draw.status}</TableCell>
@@ -87,27 +99,39 @@ function AddDrawButton(): JSX.Element {
   )
 }
 
-function DrawDetailsGrid(): JSX.Element {
+function DrawDetailsGrid(props: { selectedDraw: FullDraw | undefined }): JSX.Element {
+  const draw = props.selectedDraw ? props.selectedDraw : {
+    id: 0,
+    status: '',
+    insertTime: '',
+    drawTime: undefined,
+    participants: [],
+    result: {
+      winnerEmployeeId: '',
+      resultTime: '',
+    },
+  }
+
   return (
     <Box>
       <Grid2 container spacing={2}>
         <Grid2 xs={6}>
-          <TextField variant="filled" fullWidth={true} helperText="Draw ID" value={1} />
+          <TextField variant="filled" fullWidth={true} helperText="Draw ID" value={draw.id === 0 ? '' : draw.id} />
         </Grid2>
         <Grid2 xs={6}>
-          <TextField variant="filled" fullWidth={true} helperText="Status" value={'OPEN'} />
+          <TextField variant="filled" fullWidth={true} helperText="Status" value={draw.status} />
         </Grid2>
         <Grid2 xs={4}>
-          <TextField variant="filled" fullWidth={true} helperText="Insert time" value={'1970-01-01T00:00.00.000Z'} />
+          <TextField variant="filled" fullWidth={true} helperText="Insert time" value={reformatIso8601Timestamp(draw.insertTime)} />
         </Grid2>
         <Grid2 xs={4}>
-          <TextField variant="filled" fullWidth={true} helperText="Draw time" value={'1970-01-01T00:00.00.000Z'} />
+          <TextField variant="filled" fullWidth={true} helperText="Draw time" value={reformatIso8601Timestamp(draw.drawTime)} />
         </Grid2>
         <Grid2 xs={4}>
-          <TextField variant="filled" fullWidth={true} helperText="Result time" value={'1970-01-01T00:00.00.000Z'} />
+          <TextField variant="filled" fullWidth={true} helperText="Result time" value={reformatIso8601Timestamp(draw.result?.resultTime)} />
         </Grid2>
         <Grid2 xs={12}>
-          <TextField variant="filled" fullWidth={true} helperText="Winner" value={'John Smith'} />
+          <TextField variant="filled" fullWidth={true} helperText="Winner" value={draw.result?.winnerEmployeeId} />
         </Grid2>
       </Grid2>
       <Box sx={{ display: 'flex', marginTop: '20px' }}>
@@ -124,6 +148,8 @@ function DrawDetailsGrid(): JSX.Element {
 }
 
 export default function DrawView(): JSX.Element {
+  const [selectedDraw, setSelectedDraw] = React.useState<FullDraw>()
+
   return (
     <Box>
       <Box sx={{
@@ -148,12 +174,12 @@ export default function DrawView(): JSX.Element {
       </Box>
 
       <Box>
-        <DrawTable />
+        <DrawTable setSelectedDraw={setSelectedDraw} />
       </Box>
 
-      <Box>
+      <Box sx={{ padding: '30px' }}>
         <h3>Draw details</h3>
-        <DrawDetailsGrid />
+        <DrawDetailsGrid selectedDraw={selectedDraw}/>
       </Box>
     </Box>
   )
