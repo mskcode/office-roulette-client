@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import * as React from 'react'
 import DrawView from './DrawView'
 import EmployeeView from './EmployeeView'
@@ -22,7 +22,12 @@ function TabPanel(props: TabPanelProps): JSX.Element {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {/*
+          FIXME I don't know if using Typography as a parent component has any
+            real merit
+          <Typography component="div">{children}</Typography>
+          */}
+          {children}
         </Box>
       )}
     </div>
