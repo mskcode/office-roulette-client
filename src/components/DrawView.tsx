@@ -15,8 +15,9 @@ import {
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import * as React from 'react'
-import { Draw, FullDraw, createDraw, fetchDraw, fetchDraws } from '../services/officeRouletteClient'
+import { Draw, FullDraw, createDraw, executeDraw, fetchDraw, fetchDraws } from '../services/officeRouletteClient'
 import { reformatIso8601Timestamp } from '../services/utils'
+import EmployeeTable from './EmployeeTable'
 import { HoverTableRow } from './HoverTableRow'
 
 
@@ -70,7 +71,6 @@ function DrawTable(props: { setSelectedDraw: React.Dispatch<React.SetStateAction
           {draws.map((draw) => (
             <HoverTableRow
               key={draw.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               onClick={() => onTableRowClick(draw.id)}
             >
               <TableCell component="th" scope="row">{draw.id}</TableCell>
@@ -112,6 +112,51 @@ function DrawDetailsGrid(props: { selectedDraw: FullDraw | undefined }): JSX.Ele
     },
   }
 
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = React.useState<string[]>([])
+
+  const onAddParticipantsClick = () => {
+    alert('onAddParticipantsClick()')
+  }
+
+  const onRemoveParticipantsClick = () => {
+    const employeeIdsToRemove = selectedEmployeeIds.join(', ')
+    alert(`onRemoveParticipantsClick(): ${employeeIdsToRemove}`)
+  }
+
+  const onExecuteDrawClick = async (drawId: number) => {
+    alert(`Executing draw ID ${drawId}`)
+    try {
+      const draw = await executeDraw(drawId)
+      console.log(`Executed draw ID ${draw.id}`)
+    } catch (e: unknown) {
+      // TODO handle error
+      console.error(e)
+    }
+  }
+
+  const onEmployeeSelectionChange = (employeeId: string, checked: boolean) => {
+    const indexOfEmployeeId = selectedEmployeeIds.indexOf(employeeId)
+    if (checked) {
+      // add employee ID or do nothing
+      if (indexOfEmployeeId >= 0) {
+        // array already contains the employee ID; do nothing
+      } else {
+        // add employee ID to array
+        selectedEmployeeIds.push(employeeId)
+      }
+    } else {
+      // remove employee ID or do nothing
+      if (indexOfEmployeeId < 0) {
+        // array doesn't contains the employee ID; do nothing
+      } else {
+        // remove employee ID from the array
+        selectedEmployeeIds.splice(indexOfEmployeeId, 1)
+      }
+    }
+  }
+
+  const drawClosed = draw.status === 'CLOSED'
+
   return (
     <Box>
       <Grid2 container spacing={2}>
@@ -136,12 +181,33 @@ function DrawDetailsGrid(props: { selectedDraw: FullDraw | undefined }): JSX.Ele
       </Grid2>
       <Box sx={{ display: 'flex', marginTop: '20px' }}>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'left', width: '50%' }}>
-          <Button variant="contained"><AddIcon /> Add participants</Button>
-          <Button variant="contained" sx={{ marginLeft: '10px' }}><RemoveIcon />Remove participants</Button>
+          <Button
+            variant="contained"
+            onClick={onAddParticipantsClick}
+            disabled={drawClosed}
+          ><AddIcon /> Add participants</Button>
+          <Button
+            variant="contained"
+            onClick={onRemoveParticipantsClick}
+            disabled={drawClosed}
+            sx={{ marginLeft: '10px' }}
+          ><RemoveIcon />Remove participants</Button>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'right', width: '50%' }}>
-          <Button variant="contained">Execute draw</Button>
+          <Button
+            variant="contained"
+            onClick={() => onExecuteDrawClick(draw.id)}
+            disabled={drawClosed}
+          >Execute draw</Button>
         </Box>
+      </Box>
+      <Box sx={{ marginTop: '30px' }}>
+        <EmployeeTable
+          employees={draw.participants}
+          showSelectionCheckbox={true}
+          showDeleteButton={false}
+          onEmployeeSelectionChange={onEmployeeSelectionChange}
+        />
       </Box>
     </Box>
   )

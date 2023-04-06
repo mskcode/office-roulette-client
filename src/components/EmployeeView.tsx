@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { Box, Button, Modal, TextField } from '@mui/material'
 import * as React from 'react'
-import { addEmployee } from '../services/officeRouletteClient'
+import { Employee, addEmployee, fetchEmployees } from '../services/officeRouletteClient'
 import EmployeeTable from './EmployeeTable'
 
 function OpenAddEmployeeModalButton(): JSX.Element {
@@ -86,6 +86,21 @@ function RefreshEmployeeTableButton(): JSX.Element {
 }
 
 export default function EmployeeView(): JSX.Element {
+  const [employees, setEmployees] = React.useState<Employee[]>([])
+
+  React.useEffect(() => {
+    const asyncFetchEmployees = async () => {
+      try {
+        const employees = await fetchEmployees()
+        setEmployees(employees)
+      } catch (e: unknown) {
+        // TODO handle error
+        console.error(e)
+      }
+    }
+    asyncFetchEmployees()
+  }, [])
+
   return (
     <Box>
       <Box sx={{
@@ -110,7 +125,7 @@ export default function EmployeeView(): JSX.Element {
       </Box>
 
       <Box>
-        <EmployeeTable />
+        <EmployeeTable employees={employees}/>
       </Box>
     </Box>
   )
