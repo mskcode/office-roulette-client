@@ -112,7 +112,8 @@ function DrawDetailsGrid(props: { selectedDraw: FullDraw | undefined }): JSX.Ele
     },
   }
 
-  const [selectedEmployeeIds, setSelectedEmployeeIds] = React.useState<string[]>([])
+  // FIXME should we use the setter function?
+  const [selectedEmployeeIds, _setSelectedEmployeeIds] = React.useState<string[]>([])
 
   const onAddParticipantsClick = () => {
     alert('onAddParticipantsClick()')
